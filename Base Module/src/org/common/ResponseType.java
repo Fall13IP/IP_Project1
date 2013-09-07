@@ -1,0 +1,18 @@
+package org.common;
+
+public enum ResponseType {
+	REGISTER_OK,
+	LEAVE_OK,
+	PQUERY_OK,
+	KEEP_ALIVE_OK,
+	RFC_QUERY_OK,
+	GET_RFC_OK,
+	REGISTER_ERROR,
+	LEAVE_ERROR,
+	PQUERY_ERROR,
+	KEEP_ALIVE_ERROR,
+	RFC_QUERY_ERROR,
+	GET_RFC_ERROR
+	
+
+}
