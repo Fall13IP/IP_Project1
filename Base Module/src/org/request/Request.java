@@ -4,33 +4,33 @@ import java.util.HashMap;
 import java.util.Hashtable;
 
 public class Request {
-RequestType type;
-HashMap<String, Object> data;
-
-	
-public Request(){
-	data = new HashMap<>();
-}
+	private RequestType type;
+	private HashMap<String, Object> data;
 
 
-public RequestType getType() {
-	return type;
-}
+	public Request(){
+		data = new HashMap<>();
+	}
 
 
-public void setType(RequestType type) {
-	this.type = type;
-}
+	public RequestType getType() {
+		return type;
+	}
 
 
-public HashMap<String, Object> getData() {
-	return data;
-}
+	public void setType(RequestType type) {
+		this.type = type;
+	}
 
 
-public void setData(HashMap<String, Object> data) {
-	this.data = data;
-}
+	public HashMap<String, Object> getData() {
+		return data;
+	}
+
+
+	public void setData(HashMap<String, Object> data) {
+		this.data = data;
+	}
 
 
 }

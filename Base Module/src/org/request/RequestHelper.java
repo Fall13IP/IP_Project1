@@ -43,12 +43,12 @@ public class RequestHelper {
 		data.put(DataKeyConstants.COOKIE, cookie);
 		return request;
 	}
-	public static Request createRFCQueryRequest(int cookie){
+	public static Request createRFCQueryRequest(int cookie){ //check is we need to send cookie
 		Request request = new Request();
 		request.setType(RequestType.RFC_QUERY);
 		return request;
 	}
-	public static Request createRFCRequestRequest(int rfcindex){
+	public static Request createRFCRequest(int rfcindex){
 		Request request = new Request();
 		request.setType(RequestType.RFC_REQUEST);
 		HashMap<String,Object> data = request.getData();
