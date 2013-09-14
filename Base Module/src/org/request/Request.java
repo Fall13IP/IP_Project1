@@ -1,9 +1,12 @@
 package org.request;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Hashtable;
 
-public class Request {
+public class Request implements Serializable {
+	
+	public static final long serialVersionUID = 650L;
 	private RequestType type;
 	private HashMap<String, Object> data;
 

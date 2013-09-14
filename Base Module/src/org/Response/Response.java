@@ -1,10 +1,13 @@
 package org.Response;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 import org.common.ResponseType;
 
-public class Response {
+public class Response implements Serializable {
+	
+	public static final long serialVersionUID = 750L;
 	
 	ResponseType type;
 	HashMap<String, Object> data;	
