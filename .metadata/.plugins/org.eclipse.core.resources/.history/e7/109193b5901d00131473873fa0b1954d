@@ -1,0 +1,9 @@
+package org.common;
+
+public class DataKeyConstants {
+
+	public static final String HOST_NAME = "hostname";
+	public static final String IP_PORT = "ip_Port"; 
+	public static final String COOKIE = "0";//traces session of client
+	public static final String RFC_INDEX = "rfcindex";//RFC which peer downloads.
+}

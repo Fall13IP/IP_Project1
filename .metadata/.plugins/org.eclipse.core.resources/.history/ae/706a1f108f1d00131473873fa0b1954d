@@ -1,0 +1,90 @@
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.HashMap;
+
+import org.Response.Response;
+import org.common.Constants;
+import org.common.DataKeyConstants;
+import org.request.RequestHelper;
+import org.request.Request;
+
+public class ClientFunction {
+
+	public int registerP() {
+	
+	String hostName = RequestHelper.getHost();
+	String port = RequestHelper.getIP();
+	//int portNo = Integer.parseInt(port);
+	String x="";
+	int y=0;
+	Request clientRegisterData = RequestHelper.createRegisterRequest(hostName,1000);
+	System.out.println("Host name :"+hostName);
+	//System.out.println("port number"+Constants.RS_SERVER_PORT_NUMBER);
+	try {
+		Socket socketConnection = new Socket("10.139.63.230",1000);
+		//Socket s = new Socket("PanchaLenovo",1000);
+		System.out.println("Connected to server");
+		ObjectOutputStream objectOutputStream = new ObjectOutputStream(socketConnection.getOutputStream());
+		ObjectInputStream objectInputStream = new ObjectInputStream(socketConnection.getInputStream());
+		objectOutputStream.writeObject(clientRegisterData);
+		Response response = (Response) objectInputStream.readObject();
+		System.out.println("Received response: " + response.getType().toString());
+		HashMap<String, Object> data = response.getData();
+		System.out.println("Value of cookie: " + data.get(DataKeyConstants.COOKIE).toString());
+		
+	}
+	catch (Exception e) {
+		e.printStackTrace();
+	}
+	return 0;
+}
+	public int keepAliveFunc(int cookie) {
+		
+		Request keepAliveRequest = RequestHelper.createKeepAliveRequest(cookie);
+		try {
+			Socket socketConnection = new Socket("10.139.63.230",1000);			
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(socketConnection.getOutputStream());
+			objectOutputStream.writeObject(keepAliveRequest);			
+			ObjectInputStream objectInputStream = new ObjectInputStream(socketConnection.getInputStream());
+			System.out.println("Leave Request from Client"+keepAliveRequest.toString());
+			Response response = (Response) objectInputStream.readObject();
+			System.out.println("Received response: " + response.getType().toString());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+		
+		
+		
+		return 0;
+		
+	}
+	public int pQueryFunc(int cookie) {
+		Request pQueryRequest = RequestHelper.createPqueryRequest(cookie);
+		
+		
+		
+		return 0;
+		
+	}
+	public int leaveFunc(int cookie) {
+		
+		Request leaveRequest = RequestHelper.createLeaveRequest(cookie);
+		
+		try {
+			Socket socketConnection = new Socket("10.139.63.230",1000);			
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(socketConnection.getOutputStream());
+			objectOutputStream.writeObject(leaveRequest);			
+			ObjectInputStream objectInputStream = new ObjectInputStream(socketConnection.getInputStream());
+			System.out.println("Leave Request from Client"+leaveRequest.toString());
+			Response response = (Response) objectInputStream.readObject();
+			System.out.println("Received response: " + response.getType().toString());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+		return 0;
+		
+	}
+}

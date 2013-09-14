@@ -1,0 +1,33 @@
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
+import org.common.Constants;
+import org.request.RequestHelper;
+import org.request.Request;
+
+public class registerPeer {
+
+	public int registerP() {
+	
+	String hostName = RequestHelper.getHost();
+	String port = RequestHelper.getIP();
+	//int portNo = Integer.parseInt(port);
+	String x="";
+	int y=0;
+	Request r = RequestHelper.createRegisterRequest(hostName,44444);
+	try {
+		Socket s = new Socket("PanchaLenovo",Constants.RS_SERVER_PORT_NUMBER);
+		ObjectOutputStream objectOutputStream = new ObjectOutputStream(s.getOutputStream());
+		objectOutputStream.writeObject(r);
+	}
+	catch (Exception e) {
+		e.printStackTrace();
+	}
+	return 0;
+}
+	public static void main(String args[]){
+		registerPeer peer = new registerPeer();
+		peer.registerP();
+	}
+	
+}

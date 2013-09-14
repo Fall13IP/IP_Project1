@@ -1,0 +1,36 @@
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
+import org.common.Constants;
+import org.request.RequestHelper;
+import org.request.Request;
+
+public class registerPeer {
+
+	public int registerP() {
+	
+	String hostName = RequestHelper.getHost();
+	String port = RequestHelper.getIP();
+	//int portNo = Integer.parseInt(port);
+	String x="";
+	int y=0;
+	Request r = RequestHelper.createRegisterRequest(hostName,1000);
+	System.out.println("Host name :"+hostName);
+	//System.out.println("port number"+Constants.RS_SERVER_PORT_NUMBER);
+	try {
+		Socket s = new Socket("10.139.63.230",1000);
+		System.out.println("Connected to server");
+		ObjectOutputStream objectOutputStream = new ObjectOutputStream(s.getOutputStream());
+		objectOutputStream.writeObject(r);
+	}
+	catch (Exception e) {
+		e.printStackTrace();
+	}
+	return 0;
+}
+	public static void main(String args[]){
+		registerPeer peer = new registerPeer();
+		peer.registerP();
+	}
+	
+}
