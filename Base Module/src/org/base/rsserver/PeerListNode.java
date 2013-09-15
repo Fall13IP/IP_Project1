@@ -1,8 +1,9 @@
 package org.base.rsserver;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
-public class PeerListNode {
+public class PeerListNode implements Serializable{
 	
 	private String hostName;
 	private int cookie;
