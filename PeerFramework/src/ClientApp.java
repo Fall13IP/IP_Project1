@@ -8,7 +8,7 @@ public class ClientApp {
 		ClientFunction peer = new ClientFunction();
 		peer.registerPeer();
 		
-		//peer.leaveFunc();
+		peer.leaveFunc();
 	}
 
 }
