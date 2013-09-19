@@ -20,7 +20,7 @@ public class ClientFunction {
 	}
 	private int cookie;
 	private int i=0;
-	private int PortNumber = Integer.parseInt(Constants.SERVER_PORT_ADDRESS);//takes the server IP from Constants and converts it into int.
+	private int PortNumber = Integer.parseInt(Constants.SERVER_PORT_ADDRESS);
 	private List <PeerListNode> peerList;
 	public int registerPeer() {
 	
@@ -130,7 +130,7 @@ public class ClientFunction {
 	}
 	
 
-	public Response makeConnectionGetResponse(Request Request,String ServerIP,int ServerPort){//makes socket connection and does request and response., made it a general IP and port address function, now even a client can use it.
+	public Response makeConnectionGetResponse(Request Request,String ServerIP,int ServerPort){//makes socket connection and does request and response.
 		
 		try {
 			Socket socketConnection = new Socket(ServerIP,ServerPort);			

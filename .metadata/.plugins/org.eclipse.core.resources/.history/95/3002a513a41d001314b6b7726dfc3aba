@@ -7,10 +7,8 @@ public class ClientApp {
 		// TODO Auto-generated method stub
 		ClientFunction peer = new ClientFunction();
 		peer.registerPeer();
-		peer.pQueryFunc();
-		peer.keepAliveFunc();
 		
-		peer.leaveFunc();
+		//peer.leaveFunc();
 	}
 
 }

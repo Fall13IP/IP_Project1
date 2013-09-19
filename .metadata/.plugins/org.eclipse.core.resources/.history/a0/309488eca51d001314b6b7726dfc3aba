@@ -19,8 +19,6 @@ public class ClientFunction {
 		cookie = 8;
 	}
 	private int cookie;
-	private int i=0;
-	private int PortNumber = Integer.parseInt(Constants.SERVER_PORT_ADDRESS);//takes the server IP from Constants and converts it into int.
 	private List <PeerListNode> peerList;
 	public int registerPeer() {
 	
@@ -32,13 +30,25 @@ public class ClientFunction {
 	Request clientRegisterData = RequestHelper.createRegisterRequest(hostName,1000);
 	System.out.println("Host name :"+hostName);
 	
-	Response response = makeConnectionGetResponse(clientRegisterData,Constants.SERVER_IP_ADDRESS,PortNumber);
+	Response response = makeConnectionGetResponse(clientRegisterData);
 	System.out.println("Received response: " + response.getType().toString());
 	HashMap<String, Object> data = response.getData();
 	System.out.println("Value of cookie: " + data.get(DataKeyConstants.COOKIE).toString());
 	this.cookie = (int) data.get(DataKeyConstants.COOKIE);
 	
-
+	//System.out.println("port number"+Constants.RS_SERVER_PORT_NUMBER);
+	/*try {
+		Socket socketConnection = new Socket("10.139.62.151",1000);
+		//Socket s = new Socket("PanchaLenovo",1000);
+		System.out.println("Connected to server");
+		ObjectOutputStream objectOutputStream = new ObjectOutputStream(socketConnection.getOutputStream());
+		ObjectInputStream objectInputStream = new ObjectInputStream(socketConnection.getInputStream());
+		objectOutputStream.writeObject(clientRegisterData);
+		
+	}
+	catch (Exception e) {
+		e.printStackTrace();
+	}*/
 	return 0;
 }
 	public int keepAliveFunc() {
@@ -51,7 +61,7 @@ public class ClientFunction {
 			
 		
 		Request keepAliveRequest = RequestHelper.createKeepAliveRequest(cookie);
-		Response response = makeConnectionGetResponse(keepAliveRequest,Constants.SERVER_PORT_ADDRESS,PortNumber);
+		Response response = makeConnectionGetResponse(keepAliveRequest);
 		System.out.println("Type of response  "+response.getType().toString());
 		if(response.getType()==ResponseType.KEEP_ALIVE_ERROR)
 		{
@@ -65,7 +75,7 @@ public class ClientFunction {
 	public int pQueryFunc() {
 		Request pQueryRequest = RequestHelper.createPqueryRequest(cookie);
 		int index =0;
-		Response response = makeConnectionGetResponse(pQueryRequest,Constants.SERVER_PORT_ADDRESS,PortNumber);
+		Response response = makeConnectionGetResponse(pQueryRequest);
 		HashMap<String, Object> ClientList = response.getData();
 		System.out.println(response.getType().toString());
 		peerList = (List<PeerListNode>) ClientList.get("peerList");
@@ -74,7 +84,7 @@ public class ClientFunction {
 			System.out.println(peerList.get(index));
 		*/
 		
-		System.out.println("Printing peer list");
+		/* System.out.println("Printing peer list");
 	        for(int i = 0; i < peerList.size(); i ++){
 	            PeerListNode node = peerList.get(i);
 	            System.out.println(node.getHostName());
@@ -84,23 +94,10 @@ public class ClientFunction {
 	            System.out.println(node.getPortNumber());
 	            System.out.println(node.getActiveTimes());
 	            System.out.println(node.getRecentTimestamp());
-	        }
+	        }*/
 	            return 0;
 		
 	}
-	public int RFCIndexFunc()
-	{
-		
-		PeerListNode nodeInformation= peerList.get(0);
-		
-		Request RFCIndexRequest = RequestHelper.createRFCQueryRequest(cookie);
-		Response response = makeConnectionGetResponse(RFCIndexRequest,nodeInformation.getHostName(),nodeInformation.getPortNumber());
-		
-		return 0;
-		
-	}
-	
-	
 	public int leaveFunc() {
 		
 		
@@ -112,7 +109,7 @@ public class ClientFunction {
 			
 		
 		Request leaveRequest = RequestHelper.createLeaveRequest(cookie);
-		Response response = makeConnectionGetResponse(leaveRequest,Constants.SERVER_PORT_ADDRESS,PortNumber);
+		Response response = makeConnectionGetResponse(leaveRequest);
 		System.out.println("Type of response  "+response.getType().toString());
 		if(response.getType()==ResponseType.LEAVE_OK)
 		{
@@ -128,12 +125,10 @@ public class ClientFunction {
 		return 0;
 		
 	}
-	
-
-	public Response makeConnectionGetResponse(Request Request,String ServerIP,int ServerPort){//makes socket connection and does request and response., made it a general IP and port address function, now even a client can use it.
+	public Response makeConnectionGetResponse(Request Request){
 		
 		try {
-			Socket socketConnection = new Socket(ServerIP,ServerPort);			
+			Socket socketConnection = new Socket("10.139.62.151",1000);			
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(socketConnection.getOutputStream());
 			objectOutputStream.writeObject(Request);			
 			ObjectInputStream objectInputStream = new ObjectInputStream(socketConnection.getInputStream());
