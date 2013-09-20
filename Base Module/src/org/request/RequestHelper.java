@@ -48,11 +48,12 @@ public class RequestHelper {
 		request.setType(RequestType.RFC_QUERY);
 		return request;
 	}
-	public static Request createRFCRequest(int rfcindex){
+	public static Request createRFCRequest(int rfcindex, String rfcTitle){
 		Request request = new Request();
 		request.setType(RequestType.RFC_REQUEST);
 		HashMap<String,Object> data = request.getData();
 		data.put(DataKeyConstants.RFC_INDEX, rfcindex);
+		data.put(DataKeyConstants.RFC_TITLE, rfcTitle);
 		return request;
 	}
 	public static String getHost(){
