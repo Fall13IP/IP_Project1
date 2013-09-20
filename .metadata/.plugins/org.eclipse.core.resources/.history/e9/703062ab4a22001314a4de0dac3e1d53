@@ -123,9 +123,9 @@ public class ClientFunction {
             System.out.println(node.getRfcNumber());
         }
         //merges RFC lists
-        for(iteratorFirst=0;iteratorFirst<rfcList.size();iteratorFirst++)
+        while(rfcList.isEmpty())
         {	
-        	for(iteratorSecond=0;iteratorSecond<rfcIndexList.size();iteratorSecond++)
+        	while(rfcIndexList.isEmpty())
         	{
         		if((rfcList.get(iteratorFirst).getRfcNumber()==rfcIndexList.get(iteratorSecond).getRfcNumber()) && (rfcList.get(iteratorFirst).getRfcHostname()==rfcIndexList.get(iteratorSecond).getRfcHostname())){
         			//compares RFC number and host, if it is there then does not includes it inside the list otherwise adds the thing in the list.
@@ -134,11 +134,12 @@ public class ClientFunction {
         		else{
         			rfcIndexList.add(rfcList.get(iteratorFirst));
         		}
-      
+        		iteratorSecond+=1;
         	}
-        	
+        	iteratorFirst+=1;
         }
-             
+        
+        
         
         
         
