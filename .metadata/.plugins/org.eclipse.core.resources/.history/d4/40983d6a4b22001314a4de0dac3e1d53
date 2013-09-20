@@ -127,7 +127,7 @@ public class ClientFunction {
         {	
         	for(iteratorSecond=0;iteratorSecond<rfcIndexList.size();iteratorSecond++)
         	{
-        		if((rfcList.get(iteratorFirst).getRfcNumber()==rfcIndexList.get(iteratorSecond).getRfcNumber()) && (rfcList.get(iteratorFirst).getRfcHostname().equals(rfcIndexList.get(iteratorSecond).getRfcHostname()))){
+        		if((rfcList.get(iteratorFirst).getRfcNumber()==rfcIndexList.get(iteratorSecond).getRfcNumber()) && (rfcList.get(iteratorFirst).getRfcHostname()==rfcIndexList.get(iteratorSecond).getRfcHostname())){
         			//compares RFC number and host, if it is there then does not includes it inside the list otherwise adds the thing in the list.
         			System.out.println("RFC number:"+rfcList.get(iteratorFirst).getRfcNumber()+" and Hostname: "+rfcList.get(iteratorFirst).getRfcHostname()+"are same");
         		}
