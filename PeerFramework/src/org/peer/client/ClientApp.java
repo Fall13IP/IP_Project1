@@ -1,4 +1,9 @@
 package org.peer.client;
+import java.util.List;
+import java.util.Random;
+
+import org.base.peerserver.RFCIndexNode;
+import org.base.rsserver.PeerListNode;
 import org.common.DataKeyConstants;
 import org.peer.server.PeerServerApp;
 
@@ -6,6 +11,8 @@ import org.peer.server.PeerServerApp;
 public class ClientApp {
 
 	public static void main(String[] args) {
+		
+		List <PeerListNode> peerList;
 		PeerServerApp peerServerApp = new PeerServerApp();
 		peerServerApp.start();
 		System.out.println("After calling start");
@@ -13,8 +20,14 @@ public class ClientApp {
 		peer.registerPeer();
 		peer.pQueryFunc();
 		peer.keepAliveFunc();
+		peerList = peer.getPeerList();
+		peer.RFCIndexFunc(peerList.get(rand(peerList.size())));
 		
 		peer.leaveFunc();
 	}
-
+public static int rand(int size){
+	Random random = new Random();
+	int randomint = random.nextInt(size);
+	return randomint;
+}
 }

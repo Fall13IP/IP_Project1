@@ -31,7 +31,7 @@ public class ClientFunction {
 	//private int PortNumber = Integer.parseInt(Constants.SERVER_PORT_ADDRESS);//takes the server IP from Constants and converts it into int.
 	private List <PeerListNode> peerList;
 	private static List<RFCIndexNode> rfcIndexList = Collections.synchronizedList(new LinkedList<RFCIndexNode>());;
-	
+	private List <RFCIndexNode> rfcList;
 	public ClientFunction(String configFileName){
 		//cookie = 8;	
 		
@@ -113,11 +113,20 @@ public class ClientFunction {
 			success = 0;			
 			System.out.println("RFC Index error: " + response.getData().get(DataKeyConstants.ERROR_MESSAGE));
 		}
-		
+		HashMap<String,Object> RFCIndex = response.getData();
+		rfcList = (List<RFCIndexNode>) RFCIndex.get(DataKeyConstants.RFC_INDEX_LIST);
+		System.out.println("Printing peer list");
+        for(int i = 0; i < rfcList.size(); i ++){
+            RFCIndexNode node = rfcList.get(i);
+            System.out.println(node.getRfcNumber());
+        }
 		return success;
 		
 	}
 	
+	public List<PeerListNode> getPeerList() {
+		return peerList;
+	}
 	public int GetRFCFunc(PeerListNode peerNode, int rfcIndex, String rfcTitle){
 		
 		int success = 1;

@@ -1,0 +1,27 @@
+package org.peer.client;
+import java.util.List;
+
+import org.base.peerserver.RFCIndexNode;
+import org.base.rsserver.PeerListNode;
+import org.common.DataKeyConstants;
+import org.peer.server.PeerServerApp;
+
+
+public class ClientApp {
+
+	public static void main(String[] args) {
+		
+		List <PeerListNode> peerList;
+		PeerServerApp peerServerApp = new PeerServerApp();
+		peerServerApp.start();
+		System.out.println("After calling start");
+		ClientFunction peer = new ClientFunction("peer1.txt");
+		peer.registerPeer();
+		peer.pQueryFunc();
+		peer.keepAliveFunc();
+		peerList = peer.getPeerList();
+		peer.RFCIndexFunc(peerList.get(0));
+		peer.leaveFunc();
+	}
+
+}
