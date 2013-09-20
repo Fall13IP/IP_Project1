@@ -1,9 +1,15 @@
 package org.peer.server;
 
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -12,6 +18,7 @@ import java.util.List;
 import org.Response.Response;
 import org.Response.ResponseHelper;
 import org.base.peerserver.RFCIndexNode;
+import org.common.Constants;
 import org.common.DataKeyConstants;
 import org.common.ResponseType;
 import org.peer.client.ClientFunction;
@@ -42,6 +49,9 @@ public class PeerServer extends Thread {
 			if(request.getType() == RequestType.RFC_QUERY){
 				response = handleRFCQueryRequest(request);
 				objectOutputStream.writeObject(response);
+			}else if(request.getType() == RequestType.RFC_REQUEST){
+				response = handleRFCIndexRequest(request);
+				objectOutputStream.writeObject(response);
 			}
 		}catch(IOException |ClassNotFoundException ex){
 			System.out.println(ex.getMessage());
@@ -55,26 +65,64 @@ public class PeerServer extends Thread {
 		rfcList.addAll(ClientFunction.getRfcIndexList());
 		HashMap<String, Object> data = new HashMap<>();
 		data.put(DataKeyConstants.RFC_INDEX_LIST, rfcList);
-		response = ResponseHelper.createResponse(ResponseType.GET_RFC_OK, data);
+		response = ResponseHelper.createResponse(ResponseType.RFC_QUERY_OK, data);
 		return response;
 	}
 	
 	private Response handleRFCIndexRequest(Request request){
 		Response response= null;
+		HashMap<String, Object> requestData = request.getData();
+		int rfcNumber = (int) requestData.get(DataKeyConstants.RFC_NUMBER);
+		String rfcTitle = (String) requestData.get(DataKeyConstants.RFC_TITLE);
+		HashMap<String, Object> responseData = new HashMap<String, Object>();
+		byte [] fileData = getRFCFileData(rfcNumber, rfcTitle);
+		if(fileData != null){
+			responseData.put(DataKeyConstants.RFC_FILE_DATA, fileData);
+			response = ResponseHelper.createResponse(ResponseType.GET_RFC_OK, responseData);
+		}else{
+			responseData.put(DataKeyConstants.ERROR_MESSAGE, Constants.RFC_NOT_FOUND);
+			response = ResponseHelper.createResponse(ResponseType.GET_RFC_ERROR, responseData);
+		}
+		
 		return response;
 	}
 	
-	private void getRFCFileData(int rfcNumber, String rfcTitle){
+	private byte[] getRFCFileData(int rfcNumber, String rfcTitle){
 		List<RFCIndexNode> rfcIndexList = ClientFunction.getRfcIndexList();
-		synchronized (rfcIndexList) {
+		byte [] fileData = null;
+		//synchronized (rfcIndexList) {
 			for(int i = 0; i < rfcIndexList.size(); i++){
 				
 				RFCIndexNode rfcNode = rfcIndexList.get(i);
 				if(rfcNode.getRfcNumber() == rfcNumber && rfcNode.getRfcTitle() == rfcTitle){
+					Path path = Paths.get(rfcTitle + ".txt");
+					try {
+						fileData = Files.readAllBytes(path);
+					} catch (IOException e) {
+						
+						e.printStackTrace();
+					}
 					
 				}
 			}
-		}
+		//}
+		return fileData;
 	}
-
+	
+	private byte [] testFileToByte(){
+		Path path = Paths.get("rfc7025.txt");
+		byte[] fileData = null;
+		try {
+			fileData = Files.readAllBytes(path);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return fileData;
+	}
+	public static void main(String args[]){
+		PeerServer peerServer = new PeerServer(null);
+		byte [] fileData = peerServer.testFileToByte();
+		System.out.println("size: " + fileData.length);
+	}
 }
