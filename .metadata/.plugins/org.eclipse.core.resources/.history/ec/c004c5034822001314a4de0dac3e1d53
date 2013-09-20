@@ -122,7 +122,6 @@ public class ClientFunction {
             RFCIndexNode node = rfcList.get(i);
             System.out.println(node.getRfcNumber());
         }
-        //merges RFC lists
         while(rfcList.isEmpty())
         {	
         	while(rfcIndexList.isEmpty())
@@ -226,8 +225,7 @@ public class ClientFunction {
 				
 				line = bufferedReader.readLine();
 				rfcNode.setRfcTitle(line);
-				rfcNode.setTtlValue(Constants.INITIAL_TTL_VALUE);
-                rfcNode.setRfcHostname(RequestHelper.getHost());
+				
 				rfcIndexList.add(rfcNode);
 			}			
 		} catch ( IOException e) {			
