@@ -1,4 +1,8 @@
 package org.peer.client;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
@@ -41,4 +45,5 @@ public static int rand(int size){
 	int randomint = random.nextInt(size);
 	return randomint;
 }
+
 }

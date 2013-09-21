@@ -1,9 +1,11 @@
 package org.peer.client;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -32,9 +34,10 @@ public class ClientFunction {
 	private List <PeerListNode> peerList;
 	private static List<RFCIndexNode> rfcIndexList = Collections.synchronizedList(new LinkedList<RFCIndexNode>());;
 	private List <RFCIndexNode> rfcList;
+	private String configFileName;
 	public ClientFunction(String configFileName){
 		//cookie = 8;	
-		
+		this.configFileName = configFileName;
 		populateRFCIndex(configFileName);
 	}
 	public int registerPeer(int portno) {
@@ -135,6 +138,7 @@ public class ClientFunction {
         		}
         		else{
         			rfcIndexList.add(rfcList.get(iteratorFirst));
+        			addEntryToConfigFile(rfcList.get(iteratorFirst).getRfcNumber(), rfcList.get(iteratorFirst).getRfcTitle());
         		}
       
         	}
@@ -242,6 +246,19 @@ public class ClientFunction {
 		}
 	}
 	
+	private void addEntryToConfigFile(int rfcIndex, String rfcTitle){
+		try {
+			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(configFileName));
+			bufferedWriter.append(String.valueOf(rfcIndex));
+			bufferedWriter.newLine();
+			bufferedWriter.append(rfcTitle);
+			bufferedWriter.close();
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+	}
+	
 	private void printRFCIndex(){
 		
 		for(int i = 0; i < rfcIndexList.size(); i++){
@@ -253,7 +270,8 @@ public class ClientFunction {
 	
 	public static void main(String args[]){
 		ClientFunction clientFunction = new ClientFunction("peer1.txt");
-		clientFunction.printRFCIndex();
+		clientFunction.printRFCIndex();		
+		clientFunction.addEntryToConfigFile(777, "rfc777");
 	}
 	
 }
