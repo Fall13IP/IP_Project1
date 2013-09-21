@@ -37,6 +37,7 @@ public class PeerServer extends Thread {
 
 	@Override
 	public void run() {
+		System.out.println("run method on peer server invoked");
 		ObjectInputStream objectInputStream;
 		ObjectOutputStream objectOutputStream;
 		Request request;
@@ -46,6 +47,7 @@ public class PeerServer extends Thread {
 			objectInputStream = new ObjectInputStream(this.clientSocket.getInputStream());
 			objectOutputStream = new ObjectOutputStream(this.clientSocket.getOutputStream());
 			request = (Request) objectInputStream.readObject();	
+			System.out.println("\nrequest type:"+request.getType().toString());
 			if(request.getType() == RequestType.RFC_QUERY){
 				response = handleRFCQueryRequest(request);
 				objectOutputStream.writeObject(response);
@@ -72,7 +74,7 @@ public class PeerServer extends Thread {
 	private Response handleRFCIndexRequest(Request request){
 		Response response= null;
 		HashMap<String, Object> requestData = request.getData();
-		int rfcNumber = (int) requestData.get(DataKeyConstants.RFC_NUMBER);
+		int rfcNumber = (int) requestData.get(DataKeyConstants.RFC_INDEX);
 		String rfcTitle = (String) requestData.get(DataKeyConstants.RFC_TITLE);
 		HashMap<String, Object> responseData = new HashMap<String, Object>();
 		byte [] fileData = getRFCFileData(rfcNumber, rfcTitle);
@@ -88,15 +90,18 @@ public class PeerServer extends Thread {
 	}
 	
 	private byte[] getRFCFileData(int rfcNumber, String rfcTitle){
+		System.out.println("in get file data rfc no " + rfcNumber + "rfc title " + rfcTitle);
 		List<RFCIndexNode> rfcIndexList = ClientFunction.getRfcIndexList();
 		byte [] fileData = null;
 		//synchronized (rfcIndexList) {
 			for(int i = 0; i < rfcIndexList.size(); i++){
 				
 				RFCIndexNode rfcNode = rfcIndexList.get(i);
-				if(rfcNode.getRfcNumber() == rfcNumber && rfcNode.getRfcTitle() == rfcTitle){
-					Path path = Paths.get(rfcTitle + ".txt");
+				System.out.println("server rfc details no " + rfcNode.getRfcNumber() + " title " + rfcNode.getRfcTitle());
+				if(rfcNode.getRfcNumber() == rfcNumber && rfcNode.getRfcTitle().equals(rfcTitle)){
+					Path path = Paths.get(rfcTitle);
 					try {
+						System.out.println("in try block");
 						fileData = Files.readAllBytes(path);
 					} catch (IOException e) {
 						

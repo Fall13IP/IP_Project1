@@ -1,0 +1,48 @@
+package org.peer.server;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+import org.common.Constants;
+
+
+public class PeerServerApp extends Thread {
+
+	@Override
+	public void run() {
+		ServerSocket serverSocket = null;
+		Socket clientSocket = null;		
+		try {
+			System.out.println("host name: " + InetAddress.getLocalHost().getHostAddress());
+			System.out.println("Starting peer Server");
+			serverSocket = new ServerSocket(Constants.PEER_SERVER_PORT_NUMBER);
+		} catch (IOException e) {
+			
+			System.out.println("Error opening port: " + Constants.RS_SERVER_PORT_NUMBER + " on RS server");
+			System.exit(-1);
+		}
+		while(true){
+			try{				
+				
+				clientSocket = serverSocket.accept();
+				System.out.println("Connection accepted on peer server");
+			}catch(IOException ex){
+				System.out.println("Error accepting connection on RS Server");
+			}
+			PeerServer peerServer = new PeerServer(clientSocket);
+			peerServer.run();
+			
+			/*try {
+				clientSocket.close();
+			} catch (IOException e) {
+				
+				e.printStackTrace();
+			}*/
+			
+		}
+	
+	}
+}
+			

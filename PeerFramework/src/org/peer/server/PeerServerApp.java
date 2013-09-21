@@ -9,7 +9,10 @@ import org.common.Constants;
 
 
 public class PeerServerApp extends Thread {
-
+	private int portno;
+public PeerServerApp(int portno){
+	this.portno=portno;
+}
 	@Override
 	public void run() {
 		ServerSocket serverSocket = null;
@@ -17,7 +20,7 @@ public class PeerServerApp extends Thread {
 		try {
 			System.out.println("host name: " + InetAddress.getLocalHost().getHostAddress());
 			System.out.println("Starting peer Server");
-			serverSocket = new ServerSocket(Constants.PEER_SERVER_PORT_NUMBER);
+			serverSocket = new ServerSocket(portno);
 		} catch (IOException e) {
 			
 			System.out.println("Error opening port: " + Constants.RS_SERVER_PORT_NUMBER + " on RS server");
@@ -32,7 +35,7 @@ public class PeerServerApp extends Thread {
 				System.out.println("Error accepting connection on RS Server");
 			}
 			PeerServer peerServer = new PeerServer(clientSocket);
-			peerServer.run();
+			peerServer.start();
 			
 			/*try {
 				clientSocket.close();

@@ -37,14 +37,15 @@ public class ClientFunction {
 		
 		populateRFCIndex(configFileName);
 	}
-	public int registerPeer() {
+	public int registerPeer(int portno) {
 	
-	String hostName = RequestHelper.getHost();
-	String port = RequestHelper.getIP();
+	String hostName = RequestHelper.getIP();
+	//String port = String.valueOf(Constants.PEER_SERVER_PORT_NUMBER);
+	
 	//int portNo = Integer.parseInt(port);
 	String x="";
 	int y=0;
-	Request clientRegisterData = RequestHelper.createRegisterRequest(hostName,1000);
+	Request clientRegisterData = RequestHelper.createRegisterRequest(hostName,portno);
 	System.out.println("Host name :"+hostName);
 	
 	Response response = makeConnectionGetResponse(clientRegisterData,Constants.SERVER_IP_ADDRESS,Constants.RS_SERVER_PORT_NUMBER);
@@ -109,6 +110,7 @@ public class ClientFunction {
 		int iteratorFirst=0;
 		int iteratorSecond=0;
 		Request RFCIndexRequest = RequestHelper.createRFCQueryRequest(cookie);
+		System.out.println();
 		Response response = makeConnectionGetResponse(RFCIndexRequest,peerNode.getHostName(),peerNode.getPortNumber());
 		if(response.getType() == ResponseType.RFC_QUERY_ERROR){
 			
@@ -151,17 +153,23 @@ public class ClientFunction {
 	public List<PeerListNode> getPeerList() {
 		return peerList;
 	}
-	public int GetRFCFunc(PeerListNode peerNode, int rfcIndex, String rfcTitle){
+	public byte[] GetRFCFunc(PeerListNode peerNode, int rfcIndex, String rfcTitle){
 		
-		int success = 1;
+		byte [] fileData = null;
 		Request request = RequestHelper.createRFCRequest(rfcIndex, rfcTitle);
+		if (request.getData() == null){
+			System.out.println("get rfc request data null");
+		}else{
+			System.out.println("get rfc request data NOT null");
+		}
 		Response response = makeConnectionGetResponse(request, peerNode.getHostName(), peerNode.getPortNumber());
 		if(response.getType() == ResponseType.GET_RFC_ERROR){
-			success = 0;
-			
+						
 			System.out.println("GET RFC error: " + response.getData().get(DataKeyConstants.ERROR_MESSAGE));
+		}else{
+			fileData = (byte []) response.getData().get(DataKeyConstants.RFC_FILE_DATA);
 		}
-		return success;
+		return fileData;
 	}
 	
 	public int leaveFunc() {

@@ -13,15 +13,26 @@ public class ClientApp {
 	public static void main(String[] args) {
 		
 		List <PeerListNode> peerList;
-		PeerServerApp peerServerApp = new PeerServerApp();
-		peerServerApp.start();
+		//PeerServerApp peerServerApp = new PeerServerApp();
+		//peerServerApp.start();
 		System.out.println("After calling start");
 		ClientFunction peer = new ClientFunction("peer1.txt");
-		peer.registerPeer();
+		peer.registerPeer(1010);
 		peer.pQueryFunc();
 		peer.keepAliveFunc();
 		peerList = peer.getPeerList();
-		peer.RFCIndexFunc(peerList.get(rand(peerList.size())));
+		//PeerListNode node = peerList.get(rand(peerList.size()));
+		PeerListNode node = peerList.get(0);
+		System.out.println("Connecting to " + node.getHostName()+"port no:"+node.getPortNumber());
+		peer.RFCIndexFunc(node);
+		List<RFCIndexNode> rfcList = peer.getRfcIndexList();
+		String rfcTitle = rfcList.get(2).getRfcTitle();
+		int rfcNo = rfcList.get(2).getRfcNumber();
+		System.out.println("RFC title " + rfcTitle + "  rfc no " + rfcNo);
+		byte [] fileData = peer.GetRFCFunc(node, rfcNo, rfcTitle);
+		if(fileData != null){
+			System.out.println("File size: " + fileData.length);
+		}
 		
 		peer.leaveFunc();
 	}

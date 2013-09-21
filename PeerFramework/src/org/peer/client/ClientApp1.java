@@ -15,15 +15,15 @@ public class ClientApp1 {
 	public static void main(String[] args) {
 		
 		List <PeerListNode> peerList;
-		PeerServerApp peerServerApp = new PeerServerApp();
+		PeerServerApp peerServerApp = new PeerServerApp(1200);
 		peerServerApp.start();
 		System.out.println("After calling start");
 		ClientFunction peer = new ClientFunction("peer2.txt");
-		peer.registerPeer();
+		peer.registerPeer(1200);
 		//peer.pQueryFunc();
 		while(true){
 			try {
-				Thread.sleep(10000);
+				Thread.sleep(1800000);
 				peer.keepAliveFunc();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
