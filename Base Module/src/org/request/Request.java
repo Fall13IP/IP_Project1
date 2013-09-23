@@ -12,7 +12,7 @@ public class Request implements Serializable {
 
 
 	public Request(){
-		data = new HashMap<>();
+		data = new HashMap();
 	}
 
 

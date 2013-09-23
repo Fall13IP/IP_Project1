@@ -13,7 +13,7 @@ public class Response implements Serializable {
 	HashMap<String, Object> data;	
 	public Response()
 	{
-		data = new HashMap<>();
+		data = new HashMap();
 	}
 	public ResponseType getType() {
 		return type;
