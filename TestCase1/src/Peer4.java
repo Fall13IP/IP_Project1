@@ -19,7 +19,7 @@ public class Peer4 {
 	}
 	
 	public static void startTransfer(){
-		long TimeTracker[]=null;
+		long[] TimeTracker =null;
 		TimeTracker = new long[50];
 		long cumlativeTime = 0;
 		List <PeerListNode> peerList;

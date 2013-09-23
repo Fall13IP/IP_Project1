@@ -20,7 +20,7 @@ public class Control {
 		System.out.println("Enter 2");
 		int input2 = scanner.nextInt();
 		switch(input2){
-		case 1: Peer2.startTransfer();
+		case 2: Peer2.startTransfer();
 				Peer3.startTransfer();
 				Peer4.startTransfer();
 				Peer5.startTransfer();

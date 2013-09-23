@@ -30,7 +30,7 @@ public class Peer2 {
 	}
 	
 	public static void startTransfer(){
-		long TimeTracker[]=null;
+		long[] TimeTracker;
 		TimeTracker = new long[50];
 		long cumlativeTime = 0;
 		List <PeerListNode> peerList;
@@ -38,9 +38,10 @@ public class Peer2 {
 		//PeerListNode node = peerList.get(rand(peerList.size()));
 		PeerListNode node = peerList.get(0);
 		peer2.RFCIndexFunc(node);
-		List<RFCIndexNode> rfcList = peer2.getRfcIndexList();
+		List<RFCIndexNode> rfcList = ClientFunction.getRfcIndexList();
+		System.out.println("RFC Count:"+rfcList.size());
 		Calendar c1 = null,c2=null;
-		for(int RFCCount=0;RFCCount<50;RFCCount++)
+		for(int RFCCount=0;RFCCount<2;RFCCount++)
 		{	
 			c1.getInstance();
 			

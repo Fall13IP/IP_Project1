@@ -128,6 +128,11 @@ public class ClientFunction {
             System.out.println(node.getRfcNumber());
         }
         //merges RFC lists
+        if(rfcIndexList.isEmpty()){
+        	rfcIndexList = rfcList;
+        }
+        else
+        {
         for(iteratorFirst=0;iteratorFirst<rfcList.size();iteratorFirst++)
         {	
         	for(iteratorSecond=0;iteratorSecond<rfcIndexList.size();iteratorSecond++)
@@ -145,7 +150,7 @@ public class ClientFunction {
         	
         }
              
-        
+        }   
         
         
         
