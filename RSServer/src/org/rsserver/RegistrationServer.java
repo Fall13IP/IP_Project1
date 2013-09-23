@@ -70,8 +70,10 @@ public class RegistrationServer extends Thread{
 				 System.out.println("Sent response for keep alive");
 				 printPeerList();
 			 }
-		} catch (IOException | ClassNotFoundException e) {
+		} catch (IOException ioe) {
 			// TODO Auto-generated catch block
+			ioe.printStackTrace();
+		}catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		
@@ -159,7 +161,7 @@ public class RegistrationServer extends Thread{
 	}
 	private int getCookieFromRequest(Request request){
 		HashMap<String, Object> data = request.getData();
-		int cookie = (int) data.get(DataKeyConstants.COOKIE);
+		int cookie = Integer.valueOf(data.get(DataKeyConstants.COOKIE).toString());
 		return cookie;
 	}
 	private PeerListNode getPeer(int cookie){
@@ -202,7 +204,7 @@ public class RegistrationServer extends Thread{
 		int newCookie = generateCookie();
 		success = addToPeerList(newCookie, request);
 		if(success == true){
-			HashMap<String, Object> data = new HashMap<>();
+			HashMap<String, Object> data = new HashMap();
 			data.put(DataKeyConstants.COOKIE, newCookie);
 			response = ResponseHelper.createResponse(ResponseType.REGISTER_OK, data);
 		}

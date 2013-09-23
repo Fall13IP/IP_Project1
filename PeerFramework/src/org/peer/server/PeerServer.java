@@ -55,8 +55,10 @@ public class PeerServer extends Thread {
 				response = handleRFCIndexRequest(request);
 				objectOutputStream.writeObject(response);
 			}
-		}catch(IOException |ClassNotFoundException ex){
-			System.out.println(ex.getMessage());
+		}catch(IOException ioe){
+			System.out.println(ioe.getMessage());
+		}catch(ClassNotFoundException ex){
+			ex.printStackTrace();
 		}
 	}
 	
@@ -65,7 +67,7 @@ public class PeerServer extends Thread {
 		Response response = null;
 		List<RFCIndexNode> rfcList = new LinkedList<RFCIndexNode>();
 		rfcList.addAll(ClientFunction.getRfcIndexList());
-		HashMap<String, Object> data = new HashMap<>();
+		HashMap<String, Object> data = new HashMap();
 		data.put(DataKeyConstants.RFC_INDEX_LIST, rfcList);
 		response = ResponseHelper.createResponse(ResponseType.RFC_QUERY_OK, data);
 		return response;
@@ -74,7 +76,7 @@ public class PeerServer extends Thread {
 	private Response handleRFCIndexRequest(Request request){
 		Response response= null;
 		HashMap<String, Object> requestData = request.getData();
-		int rfcNumber = (int) requestData.get(DataKeyConstants.RFC_INDEX);
+		int rfcNumber = Integer.valueOf(requestData.get(DataKeyConstants.RFC_INDEX).toString());
 		String rfcTitle = (String) requestData.get(DataKeyConstants.RFC_TITLE);
 		HashMap<String, Object> responseData = new HashMap<String, Object>();
 		byte [] fileData = getRFCFileData(rfcNumber, rfcTitle);

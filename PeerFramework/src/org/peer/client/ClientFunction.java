@@ -55,7 +55,7 @@ public class ClientFunction {
 	System.out.println("Received response: " + response.getType().toString());
 	HashMap<String, Object> data = response.getData();
 	System.out.println("Value of cookie: " + data.get(DataKeyConstants.COOKIE).toString());
-	this.cookie = (int) data.get(DataKeyConstants.COOKIE);
+	this.cookie = Integer.valueOf(data.get(DataKeyConstants.COOKIE).toString());
 	
 
 	return 0;
@@ -248,7 +248,8 @@ public class ClientFunction {
 	
 	private void addEntryToConfigFile(int rfcIndex, String rfcTitle){
 		try {
-			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(configFileName));
+			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(configFileName,true));
+			bufferedWriter.newLine();
 			bufferedWriter.append(String.valueOf(rfcIndex));
 			bufferedWriter.newLine();
 			bufferedWriter.append(rfcTitle);
