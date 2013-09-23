@@ -27,11 +27,11 @@ public class Peer4 {
 		//PeerListNode node = peerList.get(rand(peerList.size()));
 		PeerListNode node = peerList.get(0);
 		peer4.RFCIndexFunc(node);
-		List<RFCIndexNode> rfcList = peer4.getRfcIndexList();
+		List<RFCIndexNode> rfcList = ClientFunction.getRfcIndexList();
 		Calendar c1 = null,c2=null;
 		for(int RFCCount=0;RFCCount<50;RFCCount++)
 		{	
-			c1.getInstance();
+			c1=Calendar.getInstance();
 			
 		String rfcTitle = rfcList.get(RFCCount).getRfcTitle();
 		int rfcNo = rfcList.get(RFCCount).getRfcNumber();
@@ -41,7 +41,7 @@ public class Peer4 {
 			System.out.println("File size: " + fileData.length);
 			ClientHelper.writeToDisk(fileData, rfcTitle);
 		}
-		c2.getInstance();
+		c2=Calendar.getInstance();
 		
 		TimeTracker[RFCCount]=c2.getTimeInMillis()-c1.getTimeInMillis();
 		System.out.println("time"+RFCCount+(TimeTracker[RFCCount]));

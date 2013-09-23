@@ -43,7 +43,7 @@ public class Peer2 {
 		Calendar c1 = null,c2=null;
 		for(int RFCCount=0;RFCCount<2;RFCCount++)
 		{	
-			c1.getInstance();
+			c1=Calendar.getInstance();
 			
 		String rfcTitle = rfcList.get(RFCCount).getRfcTitle();
 		int rfcNo = rfcList.get(RFCCount).getRfcNumber();
@@ -53,7 +53,7 @@ public class Peer2 {
 			System.out.println("File size: " + fileData.length);
 			ClientHelper.writeToDisk(fileData, rfcTitle);
 		}
-		c2.getInstance();
+		c2=Calendar.getInstance();
 		
 		TimeTracker[RFCCount]=c2.getTimeInMillis()-c1.getTimeInMillis();
 		System.out.println("time"+RFCCount+(TimeTracker[RFCCount]));
