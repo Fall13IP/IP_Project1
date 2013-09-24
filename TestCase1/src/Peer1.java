@@ -17,8 +17,8 @@ public class Peer1 {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+	public static void startPeer() {
+		
 		PeerServerApp peerServerApp = new PeerServerApp(1200);
 		peerServerApp.start();
 		System.out.println("After calling start");
