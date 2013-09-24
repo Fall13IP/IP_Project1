@@ -1,3 +1,4 @@
+package org.testcase;
 import java.util.List;
 
 import org.base.peerserver.RFCIndexNode;
@@ -10,12 +11,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-public class Peer5 {
-	private static ClientFunction peer5;
+public class Peer3 {
+	private static ClientFunction peer3;
 	public static void startPeer(){
-		peer5 = new ClientFunction("peer5.txt");
-		peer5.registerPeer(1510);
-		peer5.pQueryFunc();
+		peer3 = new ClientFunction("peer3.txt");
+		peer3.registerPeer(1300);
+		peer3.pQueryFunc();
 	}
 	
 	public static void startTransfer(){
@@ -23,10 +24,10 @@ public class Peer5 {
 		TimeTracker = new long[50];
 		long cumlativeTime = 0;
 		List <PeerListNode> peerList;
-		peerList = peer5.getPeerList();
+		peerList = peer3.getPeerList();
 		//PeerListNode node = peerList.get(rand(peerList.size()));
 		PeerListNode node = peerList.get(0);
-		peer5.RFCIndexFunc(node);
+		peer3.RFCIndexFunc(node);
 		List<RFCIndexNode> rfcList = ClientFunction.getRfcIndexList();
 		Calendar c1 = null,c2=null;
 		for(int RFCCount=0;RFCCount<50;RFCCount++)
@@ -36,7 +37,7 @@ public class Peer5 {
 		String rfcTitle = rfcList.get(RFCCount).getRfcTitle();
 		int rfcNo = rfcList.get(RFCCount).getRfcNumber();
 		System.out.println("RFC title " + rfcTitle + "  rfc no " + rfcNo);
-		byte [] fileData = peer5.GetRFCFunc(node, rfcNo, rfcTitle);
+		byte [] fileData = peer3.GetRFCFunc(node, rfcNo, rfcTitle);
 		if(fileData != null){
 			System.out.println("File size: " + fileData.length);
 			ClientHelper.writeToDisk(fileData, rfcTitle);
@@ -52,8 +53,10 @@ public class Peer5 {
 		{
 			cumlativeTime= cumlativeTime+TimeTracker[timeIterator];
 		}
-		peer5.leaveFunc();
+		peer3.leaveFunc();
 	}
-		}
+	
+	
+}
 
 

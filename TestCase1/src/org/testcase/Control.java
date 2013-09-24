@@ -1,3 +1,4 @@
+package org.testcase;
 import java.util.Scanner;
 
 
