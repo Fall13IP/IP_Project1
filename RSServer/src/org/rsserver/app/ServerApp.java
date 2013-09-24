@@ -24,10 +24,10 @@ public class ServerApp {
 			System.out.println("Error opening port: " + Constants.RS_SERVER_PORT_NUMBER + " on RS server");
 			System.exit(-1);
 		}
+		TTLTimer ttlTimer = new TTLTimer(60);
+		ttlTimer.startTTLTimer();
 		while(true){
-			try{
-				TTLTimer ttlTimer = new TTLTimer(60);
-				ttlTimer.startTTLTimer();
+			try{				
 				clientSocket = serverSocket.accept();
 				System.out.println("Connection accepted");
 			}catch(IOException ex){
