@@ -114,9 +114,22 @@ public class RegistrationServer extends Thread{
 			PeerListNode peerNode = getPeer(cookie);
 			synchronized (peerList) {
 				if(peerNode != null){
-					HashMap<String, Object> responseData = new HashMap<String, Object>();
-					responseData.put(DataKeyConstants.PEER_LIST, peerList);
-					response = ResponseHelper.createResponse(ResponseType.PQUERY_OK, responseData);
+					List<PeerListNode> peerListToSend = Collections.synchronizedList(new LinkedList<PeerListNode>());
+					for(int i = 0; i < peerList.size(); i++){
+						PeerListNode node = peerList.get(i);
+						if(node.isAlive()){
+							peerListToSend.add(node);
+						}
+					}
+					if(peerListToSend.size() > 0){
+						HashMap<String, Object> responseData = new HashMap<String, Object>();
+						responseData.put(DataKeyConstants.PEER_LIST, peerListToSend);
+						response = ResponseHelper.createResponse(ResponseType.PQUERY_OK, responseData);
+					}else{
+						HashMap<String, Object> responseData = new HashMap<String, Object>();
+						responseData.put(DataKeyConstants.ERROR_MESSAGE, "No active peers");
+						response = ResponseHelper.createResponse(ResponseType.PQUERY_ERROR, responseData);
+					}
 				}
 				else{
 					response = createPeerNotFoundResponse(ResponseType.PQUERY_ERROR);
@@ -201,14 +214,42 @@ public class RegistrationServer extends Thread{
 		System.out.println("Handle register method invoked");
 		boolean success = false;
 		Response response = null;
-		int newCookie = generateCookie();
-		success = addToPeerList(newCookie, request);
-		if(success == true){
-			HashMap<String, Object> data = new HashMap();
-			data.put(DataKeyConstants.COOKIE, newCookie);
+		String hostName = request.getData().get(DataKeyConstants.HOST_NAME).toString();
+		PeerListNode node = peerExists(hostName);
+		if(node != null){
+			HashMap<String, Object> data = new HashMap<String, Object>();
+			data.put(DataKeyConstants.COOKIE, node.getCookie());
 			response = ResponseHelper.createResponse(ResponseType.REGISTER_OK, data);
+		}else{
+			int newCookie = generateCookie();
+			success = addToPeerList(newCookie, request);
+			if(success == true){
+				HashMap<String, Object> data = new HashMap<String, Object>();
+				data.put(DataKeyConstants.COOKIE, newCookie);
+				response = ResponseHelper.createResponse(ResponseType.REGISTER_OK, data);
+			}else{
+				HashMap<String, Object> data = new HashMap<String, Object>();
+				data.put(DataKeyConstants.ERROR_MESSAGE, Constants.REGISTER_ERROR);
+				response = ResponseHelper.createResponse(ResponseType.REGISTER_ERROR, data);
+			}
 		}
 		return response;
+	}
+	
+	private PeerListNode peerExists(String hostName){
+		PeerListNode peerFound = null;
+		synchronized (peerList) {
+			
+			for(int i = 0; i < peerList.size(); i ++){
+				PeerListNode node = peerList.get(i);
+				if(node.getHostName() == hostName){
+					peerFound = node;
+					break;
+				}
+			}
+			
+		}
+		return peerFound;
 	}
 	private boolean addToPeerList(int cookie, Request request){
 		
