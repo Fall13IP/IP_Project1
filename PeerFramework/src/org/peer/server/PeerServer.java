@@ -7,9 +7,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -94,17 +91,21 @@ public class PeerServer extends Thread {
 	private byte[] getRFCFileData(int rfcNumber, String rfcTitle){
 		System.out.println("in get file data rfc no " + rfcNumber + "rfc title " + rfcTitle);
 		List<RFCIndexNode> rfcIndexList = ClientFunction.getRfcIndexList();
-		byte [] fileData = null;
+		File file = new File(rfcTitle);
+		long length = file.length();
+		
+		byte [] fileData = new byte [(int)length];
 		//synchronized (rfcIndexList) {
 			for(int i = 0; i < rfcIndexList.size(); i++){
 				
 				RFCIndexNode rfcNode = rfcIndexList.get(i);
 				System.out.println("server rfc details no " + rfcNode.getRfcNumber() + " title " + rfcNode.getRfcTitle());
 				if(rfcNode.getRfcNumber() == rfcNumber && rfcNode.getRfcTitle().equals(rfcTitle)){
-					Path path = Paths.get(rfcTitle);
+					
 					try {
-						System.out.println("in try block");
-						fileData = Files.readAllBytes(path);
+						FileInputStream fileInputStream = new FileInputStream(file);						
+						fileInputStream.read(fileData);
+						fileInputStream.close();
 					} catch (IOException e) {
 						
 						e.printStackTrace();
@@ -116,20 +117,8 @@ public class PeerServer extends Thread {
 		return fileData;
 	}
 	
-	private byte [] testFileToByte(){
-		Path path = Paths.get("rfc7025.txt");
-		byte[] fileData = null;
-		try {
-			fileData = Files.readAllBytes(path);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return fileData;
-	}
+
 	public static void main(String args[]){
-		PeerServer peerServer = new PeerServer(null);
-		byte [] fileData = peerServer.testFileToByte();
-		System.out.println("size: " + fileData.length);
+		
 	}
 }
