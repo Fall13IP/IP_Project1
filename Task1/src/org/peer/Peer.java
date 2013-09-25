@@ -53,6 +53,7 @@ public class Peer {
 		{
 			cumlativeTime= cumlativeTime+TimeTracker[timeIterator];
 		}
+		System.out.println("Cumulative time: " + cumlativeTime);
 		
 	}
 	public static void main(String[] args) {
