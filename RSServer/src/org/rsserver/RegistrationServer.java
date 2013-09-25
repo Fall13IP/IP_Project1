@@ -41,34 +41,35 @@ public class RegistrationServer extends Thread{
 		ObjectInputStream objectInputStream;
 		ObjectOutputStream objectOutputStream;
 		Request request;
-		Response response;
+		Response response = null;
 		System.out.println("Run method called");
 		try {
 			 objectInputStream = new ObjectInputStream(this.clientSocket.getInputStream());
 			 objectOutputStream = new ObjectOutputStream(this.clientSocket.getOutputStream());
 			 request = (Request) objectInputStream.readObject();			
-			 System.out.println("Received Request type: " + request.getType().toString());
+			 System.out.println("RS Server: Received Request");
+			 request.printRequest();			 
 			 if(request.getType() == RequestType.REGISTER){				 
 				 response = handleRegisterRequest(request);
-				 objectOutputStream.writeObject(response);
-				 System.out.println("Sent response");
-				 printPeerList();				 
+				 objectOutputStream.writeObject(response);				 
+								 
 			 }
 			 else if(request.getType() == RequestType.LEAVE){
 				 response = handleLeaveRequest(request);
-				 objectOutputStream.writeObject(response);
-				 System.out.println("Sent response for leave");
-				 printPeerList();
+				 objectOutputStream.writeObject(response);				 
+				 
 			 }else if (request.getType() == RequestType.P_QUERY){
 				 response = handlePQuery(request);
-				 objectOutputStream.writeObject(response);
-				 System.out.println("Sent reponse for P query");
+				 objectOutputStream.writeObject(response);				
 				 printPeerList();
 			 }else if( request.getType() == RequestType.KEEP_ALIVE){
 				 response = handleKeepAlive(request);
-				 objectOutputStream.writeObject(response);
-				 System.out.println("Sent response for keep alive");
-				 printPeerList();
+				 objectOutputStream.writeObject(response);			
+				
+			 }
+			 if(response != null){
+				 System.out.println("RS Server: Sending response");
+				 response.printResponse();
 			 }
 		} catch (IOException ioe) {
 			// TODO Auto-generated catch block
