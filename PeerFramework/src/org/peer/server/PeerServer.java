@@ -38,19 +38,24 @@ public class PeerServer extends Thread {
 		ObjectInputStream objectInputStream;
 		ObjectOutputStream objectOutputStream;
 		Request request;
-		Response response;
+		Response response = null;
 		
 		try{
 			objectInputStream = new ObjectInputStream(this.clientSocket.getInputStream());
 			objectOutputStream = new ObjectOutputStream(this.clientSocket.getOutputStream());
 			request = (Request) objectInputStream.readObject();	
-			System.out.println("\nrequest type:"+request.getType().toString());
+			System.out.println("Peer server: Request received");
+			request.printRequest();
 			if(request.getType() == RequestType.RFC_QUERY){
 				response = handleRFCQueryRequest(request);
 				objectOutputStream.writeObject(response);
 			}else if(request.getType() == RequestType.RFC_REQUEST){
 				response = handleRFCIndexRequest(request);
 				objectOutputStream.writeObject(response);
+			}
+			if(response != null){
+				System.out.println("Peer server: sending response");
+				response.printResponse();
 			}
 		}catch(IOException ioe){
 			System.out.println(ioe.getMessage());
@@ -89,17 +94,16 @@ public class PeerServer extends Thread {
 	}
 	
 	private byte[] getRFCFileData(int rfcNumber, String rfcTitle){
-		System.out.println("in get file data rfc no " + rfcNumber + "rfc title " + rfcTitle);
+		
 		List<RFCIndexNode> rfcIndexList = ClientFunction.getRfcIndexList();
 		File file = new File(rfcTitle);
 		long length = file.length();
-		
+		System.out.println("File length from FS: " + length);
 		byte [] fileData = new byte [(int)length];
 		//synchronized (rfcIndexList) {
 			for(int i = 0; i < rfcIndexList.size(); i++){
 				
-				RFCIndexNode rfcNode = rfcIndexList.get(i);
-				System.out.println("server rfc details no " + rfcNode.getRfcNumber() + " title " + rfcNode.getRfcTitle());
+				RFCIndexNode rfcNode = rfcIndexList.get(i);				
 				if(rfcNode.getRfcNumber() == rfcNumber && rfcNode.getRfcTitle().equals(rfcTitle)){
 					
 					try {
@@ -114,6 +118,7 @@ public class PeerServer extends Thread {
 				}
 			}
 		//}
+			System.out.println("File length after reading: " + fileData.length );
 		return fileData;
 	}
 	

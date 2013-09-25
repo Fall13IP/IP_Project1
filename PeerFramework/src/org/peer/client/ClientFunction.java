@@ -35,10 +35,12 @@ public class ClientFunction {
 	private static List<RFCIndexNode> rfcIndexList = Collections.synchronizedList(new LinkedList<RFCIndexNode>());;
 	private List <RFCIndexNode> rfcList;
 	private String configFileName;
-	public ClientFunction(String configFileName){
+	private String rsServerIPAddress;
+	public ClientFunction(String configFileName, String rsServerIPAddress){
 		//cookie = 8;	
 		this.configFileName = configFileName;
 		populateRFCIndex(configFileName);
+		this.rsServerIPAddress = rsServerIPAddress;
 	}
 	public int registerPeer(int portno) {
 	
@@ -51,7 +53,7 @@ public class ClientFunction {
 	Request clientRegisterData = RequestHelper.createRegisterRequest(hostName,portno);
 	System.out.println("Host name :"+hostName);
 	
-	Response response = makeConnectionGetResponse(clientRegisterData,Constants.SERVER_IP_ADDRESS,Constants.RS_SERVER_PORT_NUMBER);
+	Response response = makeConnectionGetResponse(clientRegisterData,this.rsServerIPAddress,Constants.RS_SERVER_PORT_NUMBER);
 	System.out.println("Received response: " + response.getType().toString());
 	HashMap<String, Object> data = response.getData();
 	System.out.println("Value of cookie: " + data.get(DataKeyConstants.COOKIE).toString());
@@ -70,7 +72,7 @@ public class ClientFunction {
 			
 		
 		Request keepAliveRequest = RequestHelper.createKeepAliveRequest(cookie);
-		Response response = makeConnectionGetResponse(keepAliveRequest,Constants.SERVER_IP_ADDRESS,Constants.RS_SERVER_PORT_NUMBER);
+		Response response = makeConnectionGetResponse(keepAliveRequest,this.rsServerIPAddress,Constants.RS_SERVER_PORT_NUMBER);
 		System.out.println("Type of response  "+response.getType().toString());
 		if(response.getType()==ResponseType.KEEP_ALIVE_ERROR)
 		{
@@ -84,7 +86,7 @@ public class ClientFunction {
 	public int pQueryFunc() {
 		Request pQueryRequest = RequestHelper.createPqueryRequest(cookie);
 		int index =0;
-		Response response = makeConnectionGetResponse(pQueryRequest,Constants.SERVER_IP_ADDRESS,Constants.RS_SERVER_PORT_NUMBER);
+		Response response = makeConnectionGetResponse(pQueryRequest,this.rsServerIPAddress,Constants.RS_SERVER_PORT_NUMBER);
 		HashMap<String, Object> ClientList = response.getData();
 		System.out.println(response.getType().toString());
 		peerList = (List<PeerListNode>) ClientList.get("peerList");
@@ -192,7 +194,7 @@ public class ClientFunction {
 			
 		
 		Request leaveRequest = RequestHelper.createLeaveRequest(cookie);
-		Response response = makeConnectionGetResponse(leaveRequest,Constants.SERVER_IP_ADDRESS,Constants.RS_SERVER_PORT_NUMBER);
+		Response response = makeConnectionGetResponse(leaveRequest,this.rsServerIPAddress,Constants.RS_SERVER_PORT_NUMBER);
 		System.out.println("Type of response  "+response.getType().toString());
 		if(response.getType()==ResponseType.LEAVE_OK)
 		{
@@ -210,15 +212,18 @@ public class ClientFunction {
 	}
 	
 
-	public Response makeConnectionGetResponse(Request Request,String ServerIP,int ServerPort){//makes socket connection and does request and response., made it a general IP and port address function, now even a client can use it.
+	public Response makeConnectionGetResponse(Request request,String ServerIP,int ServerPort){//makes socket connection and does request and response., made it a general IP and port address function, now even a client can use it.
 		
 		try {
 			Socket socketConnection = new Socket(ServerIP,ServerPort);			
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(socketConnection.getOutputStream());
-			objectOutputStream.writeObject(Request);			
+			objectOutputStream.writeObject(request);			
 			ObjectInputStream objectInputStream = new ObjectInputStream(socketConnection.getInputStream());
-			System.out.println("Request from Client"+Request.getType().toString());
+			System.out.println("Peer Client: Sending Request");
+			request.printRequest();
 			Response response = (Response) objectInputStream.readObject();
+			System.out.println("Peer Client: Received response");
+			response.printResponse();
 			return response;
 		}
 		catch (Exception e) {
@@ -274,8 +279,14 @@ public class ClientFunction {
 		}
 	}
 	
+	public String getRsServerIPAddress() {
+		return rsServerIPAddress;
+	}
+	public void setRsServerIPAddress(String rsServerIPAddress) {
+		this.rsServerIPAddress = rsServerIPAddress;
+	}
 	public static void main(String args[]){
-		ClientFunction clientFunction = new ClientFunction("peer1.txt");
+		ClientFunction clientFunction = new ClientFunction("peer1.txt","10.139.75.19");
 		clientFunction.printRFCIndex();		
 		clientFunction.addEntryToConfigFile(777, "rfc777");
 	}
