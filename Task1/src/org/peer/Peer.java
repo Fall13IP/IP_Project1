@@ -131,6 +131,43 @@ public class Peer {
 		}
 		return null;
 	}
+	public static void startTest1(int serverPortNumber){
+		Scanner scanner = new Scanner(System.in);
+		while(true){
+		
+		
+			System.out.println("Enter 1 to register");
+			System.out.println("Enter 2 to begin transfer");
+			System.out.println("Enter 3 to leave P2P");
+			int input= scanner.nextInt();
+			switch(input){
+			case 1: Peer.startPeer(serverPortNumber);
+				break;
+			case 2: Peer.startTransfer();
+				break;
+			case 3: peer.leaveFunc();
+				break;
+			}
+		}
+	}
+	public static void startTest2(int serverPortNumber)
+	{
+		Scanner scanner = new Scanner(System.in);
+		while(true){
+			System.out.println("Enter 1 to register");
+			System.out.println("Enter 2 to begin transfer");
+			System.out.println("Enter 3 to leave P2P");
+			int input= scanner.nextInt();
+			switch(input){
+			case 1: Peer.task2(serverPortNumber);
+				break;
+			case 2: Peer.startTransferTask2(serverPortNumber);;
+				break;
+			case 3: peer.leaveFunc();
+				break;
+			}
+		}
+	}
 	public static void main(String[] args) {
 		if (args.length == 3){
 			String confFileName = args[0];
@@ -140,22 +177,23 @@ public class Peer {
 			PeerServerApp peerServerApp = new PeerServerApp(serverPortNumber);
 			peerServerApp.start();
 			System.out.println("Peer server started");
+			System.out.println("Enter 1 for TestCase1 otherwise 2 for TestCase2");
 			Scanner scanner = new Scanner(System.in);
 			while(true){
-				System.out.println("Enter 1 to register");
-				System.out.println("Enter 2 to begin transfer");
-				System.out.println("Enter 3 to leave P2P");
-				int input= scanner.nextInt();
-				switch(input){
-				case 1: Peer.startPeer(serverPortNumber);
-					break;
-				case 2: Peer.startTransfer();
-					break;
-				case 3: peer.leaveFunc();
-					break;
+				int UserChoice= scanner.nextInt();
+				if(UserChoice==1)
+				{
+					startTest1(serverPortNumber);
+				}
+				else
+				{
+					startTest2(serverPortNumber);
 				}
 			}
-		}else{
+			
+		}
+
+		else{
 			System.out.println("Please pass config file name , peer server port number , rs server ip as parameters");
 		}
 
