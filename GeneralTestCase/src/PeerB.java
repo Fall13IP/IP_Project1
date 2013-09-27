@@ -10,10 +10,11 @@ public class PeerB {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		ClientFunction peerB;
-		if (args.length == 3){
+		if (args.length == 4){
 			String confFileName = args[0];
 			int serverPortNumber = Integer.valueOf(args[1]);
 			String rsServerIP = args[2];
+			String peerFileValue=args[3];
 			peerB = new ClientFunction(confFileName,rsServerIP);		
 			PeerServerApp peerServerApp = new PeerServerApp(serverPortNumber);
 			peerServerApp.start();
@@ -25,7 +26,7 @@ public class PeerB {
 				Scanner scanner = new Scanner(System.in);
 				int input= scanner.nextInt();
 				switch(input){
-				case 1: peerB.registerPeer(serverPortNumber);
+				case 1: peerB.registerPeer(serverPortNumber,peerFileValue);
 					break;
 				case 2: peerB.leaveFunc();
 					break;				
