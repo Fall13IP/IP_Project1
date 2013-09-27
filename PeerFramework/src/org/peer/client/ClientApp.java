@@ -21,7 +21,7 @@ public class ClientApp {
 		//peerServerApp.start();
 		System.out.println("After calling start");
 		ClientFunction peer = new ClientFunction("peer1.txt","10.139.75.19");
-		peer.registerPeer(1010);
+		//peer.registerPeer(1010);
 		peer.pQueryFunc();
 		peer.keepAliveFunc();
 		peerList = peer.getPeerList();
