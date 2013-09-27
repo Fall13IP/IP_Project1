@@ -21,11 +21,11 @@ public class Peer {
 	private static ClientFunction peer;
 	private static String peerName;
 	public static void startPeer(int serverPortNumber){		
-		peer.registerPeer(serverPortNumber);
+		peer.registerPeer(serverPortNumber,peerName);
 		peer.pQueryFunc();
 	}
 	public static void startPeerTask2(int serverPortNumber){		
-		peer.registerPeer(serverPortNumber);
+		peer.registerPeer(serverPortNumber,peerName);
 		
 	}
 	public static void startTransfer(){

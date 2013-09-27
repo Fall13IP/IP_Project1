@@ -14,7 +14,7 @@ public class Server {
 			peerServerApp.start();
 			System.out.println("Peer server (P0) Started");
 			ClientFunction peer = new ClientFunction(confFileName,rsServerIP);
-			peer.registerPeer(serverPortNumber);
+			//peer.registerPeer(serverPortNumber);
 			while(true){
 				try {
 					Thread.sleep(1800000);
