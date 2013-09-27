@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="GeneralTestCase">
+    <property environment="env"/>
+    <property name="Base Module.location" value="../Base Module"/>
+    <property name="PeerFramework.location" value="../PeerFramework"/>
+    <property name="RSServer.location" value="../RSServer"/>
+    <property name="Task1.location" value="../Task1"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+    <path id="Base Module.classpath">
+        <pathelement location="${Base Module.location}/classes"/>
+    </path>
+    <path id="PeerFramework.classpath">
+        <pathelement location="${PeerFramework.location}/bin"/>
+        <path refid="Base Module.classpath"/>
+    </path>
+    <path id="RSServer.classpath">
+        <pathelement location="${RSServer.location}/bin"/>
+        <path refid="Base Module.classpath"/>
+    </path>
+    <path id="Task1.classpath">
+        <pathelement location="${Task1.location}/classes"/>
+        <path refid="PeerFramework.classpath"/>
+        <path refid="Base Module.classpath"/>
+    </path>
+    <path id="GeneralTestCase.classpath">
+        <pathelement location="bin"/>
+        <path refid="Base Module.classpath"/>
+        <path refid="PeerFramework.classpath"/>
+        <path refid="RSServer.classpath"/>
+        <path refid="Task1.classpath"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall">
+        <ant antfile="build.xml" dir="${Base Module.location}" inheritAll="false" target="clean"/>
+        <ant antfile="build.xml" dir="${PeerFramework.location}" inheritAll="false" target="clean"/>
+        <ant antfile="build.xml" dir="${RSServer.location}" inheritAll="false" target="clean"/>
+        <ant antfile="build.xml" dir="${Task1.location}" inheritAll="false" target="clean"/>
+    </target>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects">
+        <ant antfile="build.xml" dir="${Base Module.location}" inheritAll="false" target="build-project"/>
+        <ant antfile="build.xml" dir="${PeerFramework.location}" inheritAll="false" target="build-project"/>
+        <ant antfile="build.xml" dir="${RSServer.location}" inheritAll="false" target="build-project"/>
+        <ant antfile="build.xml" dir="${Task1.location}" inheritAll="false" target="build-project"/>
+    </target>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="GeneralTestCase.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target name="PeerA">
+        <java classname="PeerA" failonerror="true" fork="yes">
+            <arg line="PeerA.txt 2003 192.168.2.9"/>
+            <classpath refid="GeneralTestCase.classpath"/>
+        </java>
+    </target>
+    <target name="PeerB">
+        <java classname="PeerB" failonerror="true" fork="yes">
+            <arg line="PeerB.txt 2004 192.168.2.9"/>
+            <classpath refid="GeneralTestCase.classpath"/>
+        </java>
+    </target>
+</project>
