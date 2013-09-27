@@ -213,12 +213,15 @@ public class RegistrationServer extends Thread{
 		}
 	}
 	private Response handleRegisterRequest(Request request){
-		
+		System.out.println("Handle register method invoked");
 		boolean success = false;
 		Response response = null;
 		String hostName = request.getData().get(DataKeyConstants.HOST_NAME).toString();
-		PeerListNode node = peerExists(hostName);
+		int cookie = (int) request.getData().get(DataKeyConstants.COOKIE);
+		PeerListNode node = peerExists(hostName,cookie);
 		if(node != null){
+			int portNumberNew=(int) request.getData().get(DataKeyConstants.IP_PORT);
+			node.setPortNumber(portNumberNew);
 			HashMap<String, Object> data = new HashMap<String, Object>();
 			data.put(DataKeyConstants.COOKIE, node.getCookie());
 			response = ResponseHelper.createResponse(ResponseType.REGISTER_OK, data);
@@ -226,6 +229,7 @@ public class RegistrationServer extends Thread{
 			int newCookie = generateCookie();
 			success = addToPeerList(newCookie, request);
 			if(success == true){
+				
 				HashMap<String, Object> data = new HashMap<String, Object>();
 				data.put(DataKeyConstants.COOKIE, newCookie);
 				response = ResponseHelper.createResponse(ResponseType.REGISTER_OK, data);
@@ -238,13 +242,13 @@ public class RegistrationServer extends Thread{
 		return response;
 	}
 	
-	private PeerListNode peerExists(String hostName){
+	private PeerListNode peerExists(String hostName, int cookie){
 		PeerListNode peerFound = null;
 		synchronized (peerList) {
 			
 			for(int i = 0; i < peerList.size(); i ++){
 				PeerListNode node = peerList.get(i);
-				if(node.getHostName() == hostName){
+				if(node.getHostName().equals(hostName)&&(node.getCookie()==cookie)){
 					peerFound = node;
 					break;
 				}

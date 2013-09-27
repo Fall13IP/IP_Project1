@@ -14,12 +14,13 @@ public class PeerA {
 	public static void main(String[] args) {
 		// TODO  Auto-generated method stub
 		ClientFunction peerA;
-		if (args.length == 3){
+		if (args.length == 4){
 			String confFileName = args[0];
 			int serverPortNumber = Integer.valueOf(args[1]);
 			String rsServerIP = args[2];
 			peerA = new ClientFunction(confFileName,rsServerIP);		
 			PeerServerApp peerServerApp = new PeerServerApp(serverPortNumber);
+			String peerFileName = args[4];
 			peerServerApp.start();
 			List<RFCIndexNode> rfcIndexList = null;
 			List<PeerListNode> peerNodeList = null;
@@ -33,7 +34,7 @@ public class PeerA {
 				Scanner scanner = new Scanner(System.in);
 				int input= scanner.nextInt();
 				switch(input){
-				case 1: peerA.registerPeer(serverPortNumber);
+				case 1: peerA.registerPeer(serverPortNumber,peerFileName);
 					break;
 				case 2: {
 						peerA.pQueryFunc();
@@ -90,7 +91,7 @@ public class PeerA {
 		}
 
 		else{
-			System.out.println("Please pass config file name , peer server port number , rs server ip as parameters");
+			System.out.println("Please pass config file name , peer server port number , rs server ip, PeerName as parameters");
 		}
 		
 		

@@ -13,12 +13,13 @@ import org.common.DataKeyConstants;
  */
 public class RequestHelper {
 
-	public static Request createRegisterRequest(String hostName, int portNumber){
+	public static Request createRegisterRequest(String hostName, int portNumber,int cookieFile){
 		Request request = new Request();
 		request.setType(RequestType.REGISTER);
 		HashMap<String,Object> data = request.getData();
 		data.put(DataKeyConstants.HOST_NAME, hostName);
 		data.put(DataKeyConstants.IP_PORT, portNumber);
+		data.put(DataKeyConstants.COOKIE, cookieFile);
 		return request;
 	}
 	public static Request createLeaveRequest(int cookie)//should we supply cookie here

@@ -34,7 +34,7 @@ public class ClientFunction {
 	private List <PeerListNode> peerList;
 	private static List<RFCIndexNode> rfcIndexList = Collections.synchronizedList(new LinkedList<RFCIndexNode>());;
 	private List <RFCIndexNode> rfcList;
-	
+	private File cookieFile;
 	private String configFileName;
 	private String rsServerIPAddress;
 	public ClientFunction(String configFileName, String rsServerIPAddress){
@@ -43,15 +43,40 @@ public class ClientFunction {
 		populateRFCIndex(configFileName);
 		this.rsServerIPAddress = rsServerIPAddress;
 	}
-	public int registerPeer(int portno) {
+	public int registerPeer(int portno, String peerFileName) {
 	
 	String hostName = RequestHelper.getIP();
 	//String port = String.valueOf(Constants.PEER_SERVER_PORT_NUMBER);
 	
 	//int portNo = Integer.parseInt(port);
+	cookieFile = new File(peerFileName+".txt");
 	String x="";
 	int y=0;
-	Request clientRegisterData = RequestHelper.createRegisterRequest(hostName,portno);
+	FileWriter fileWriter = null;
+	BufferedWriter bufferWrite;
+	Request clientRegisterData = null;
+	if(cookieFile.exists())
+	{
+		BufferedReader bufferReader;
+		try {
+			bufferReader = new BufferedReader(new FileReader(cookieFile));
+			String cookieValue=bufferReader.readLine();
+			int cookie2=Integer.parseInt(cookieValue);
+		clientRegisterData = RequestHelper.createRegisterRequest(hostName,portno,cookie2);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	else
+	{
+		clientRegisterData = RequestHelper.createRegisterRequest(hostName,portno,-1);
+	}
+	
 	
 	
 	Response response = makeConnectionGetResponse(clientRegisterData,this.rsServerIPAddress,Constants.RS_SERVER_PORT_NUMBER);
