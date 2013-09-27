@@ -1,3 +1,6 @@
+import java.util.Scanner;
+
+
 import org.peer.client.ClientFunction;
 import org.peer.server.PeerServerApp;
 
@@ -14,7 +17,21 @@ public class PeerB {
 			peerB = new ClientFunction(confFileName,rsServerIP);		
 			PeerServerApp peerServerApp = new PeerServerApp(serverPortNumber);
 			peerServerApp.start();
-			peerB.registerPeer(serverPortNumber);
+			
+			while(true){
+
+				System.out.println("Enter 1 to register");				
+				System.out.println("Enter 2 to leave P2P");
+				Scanner scanner = new Scanner(System.in);
+				int input= scanner.nextInt();
+				switch(input){
+				case 1: peerB.registerPeer(serverPortNumber);
+					break;
+				case 2: peerB.leaveFunc();
+					break;				
+				}
+			}
+			
 			//implementation of Leave Function after 1 RFC download.
 		}
 		else{

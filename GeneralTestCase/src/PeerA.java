@@ -5,6 +5,7 @@ import java.util.Scanner;
 import org.base.peerserver.RFCIndexNode;
 import org.base.rsserver.PeerListNode;
 import org.peer.client.ClientFunction;
+import org.peer.client.ClientHelper;
 import org.peer.server.PeerServerApp;
 
 
@@ -20,7 +21,44 @@ public class PeerA {
 			peerA = new ClientFunction(confFileName,rsServerIP);		
 			PeerServerApp peerServerApp = new PeerServerApp(serverPortNumber);
 			peerServerApp.start();
-			peerA.registerPeer(serverPortNumber);
+			List<RFCIndexNode> rfcIndexList = null;
+			List<PeerListNode> peerNodeList = null;
+			while(true){
+				
+				System.out.println("Enter 1 to register");				
+				System.out.println("Enter 2 to P Query & get RFC index");
+				System.out.println("Enter 3 to get first rfc");
+				System.out.println("Enter 4 to P Query");
+				System.out.println("Enter 5 to leave");
+				Scanner scanner = new Scanner(System.in);
+				int input= scanner.nextInt();
+				switch(input){
+				case 1: peerA.registerPeer(serverPortNumber);
+					break;
+				case 2: {
+						peerA.pQueryFunc();
+						peerNodeList = peerA.getPeerList();
+						peerA.RFCIndexFunc(peerNodeList.get(1));
+						rfcIndexList = ClientFunction.getRfcIndexList();
+					break;
+				}
+				case 3:{ 
+					
+					byte [] fileData = peerA.GetRFCFunc(peerNodeList.get(1), rfcIndexList.get(0).getRfcNumber(), rfcIndexList.get(0).getRfcTitle());
+					ClientHelper.writeToDisk(fileData, "PeerA" + rfcIndexList.get(0).getRfcTitle());
+					break;
+				}
+				case 4:{
+					peerA.pQueryFunc();
+					break;
+				}
+				case 5:{
+					peerA.leaveFunc();
+					break;
+				}
+				}
+			}
+			/*peerA.registerPeer(serverPortNumber);
 			peerA.pQueryFunc();
 			List <PeerListNode> peerList;
 			peerList = peerA.getPeerList();
@@ -44,7 +82,7 @@ public class PeerA {
 				c2=Calendar.getInstance();
 				
 				
-			}
+			}*/
 			
 			
 			
