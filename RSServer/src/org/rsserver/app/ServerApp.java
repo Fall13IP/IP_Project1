@@ -35,7 +35,7 @@ public class ServerApp {
 			}
 			RegistrationServer registrationServer = new RegistrationServer(clientSocket);
 			registrationServer.start();
-			System.out.println("After calling run");
+			
 		
 			
 		}

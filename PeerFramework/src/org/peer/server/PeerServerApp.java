@@ -23,7 +23,7 @@ public PeerServerApp(int portno){
 			serverSocket = new ServerSocket(portno);
 		} catch (IOException e) {
 			
-			System.out.println("Error opening port: " + Constants.RS_SERVER_PORT_NUMBER + " on RS server");
+			System.out.println("Error opening port: " + portno + " on RS server");
 			System.exit(-1);
 		}
 		while(true){
@@ -32,7 +32,7 @@ public PeerServerApp(int portno){
 				clientSocket = serverSocket.accept();
 				System.out.println("Connection accepted on peer server");
 			}catch(IOException ex){
-				System.out.println("Error accepting connection on RS Server");
+				System.out.println("Error accepting connection on peer Server");
 			}
 			PeerServer peerServer = new PeerServer(clientSocket);
 			peerServer.start();

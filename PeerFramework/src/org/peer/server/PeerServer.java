@@ -34,7 +34,7 @@ public class PeerServer extends Thread {
 
 	@Override
 	public void run() {
-		System.out.println("run method on peer server invoked");
+		
 		ObjectInputStream objectInputStream;
 		ObjectOutputStream objectOutputStream;
 		Request request;
@@ -98,7 +98,7 @@ public class PeerServer extends Thread {
 		List<RFCIndexNode> rfcIndexList = ClientFunction.getRfcIndexList();
 		File file = new File(rfcTitle);
 		long length = file.length();
-		System.out.println("File length from FS: " + length);
+		
 		byte [] fileData = new byte [(int)length];
 		//synchronized (rfcIndexList) {
 			for(int i = 0; i < rfcIndexList.size(); i++){
@@ -118,7 +118,7 @@ public class PeerServer extends Thread {
 				}
 			}
 		//}
-			System.out.println("File length after reading: " + fileData.length );
+			
 		return fileData;
 	}
 	

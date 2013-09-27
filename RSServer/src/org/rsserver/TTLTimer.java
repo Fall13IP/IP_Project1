@@ -32,7 +32,7 @@ public class TTLTimer {
 		@Override
 		public void run() {
 			
-			System.out.println("TTL timer run invoked");
+			//System.out.println("TTL timer run invoked");
 			
 			for(int i = 0; i <peerList.size(); i ++){
 				PeerListNode peerNode = peerList.get(i);

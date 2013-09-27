@@ -61,7 +61,7 @@ public class RegistrationServer extends Thread{
 			 }else if (request.getType() == RequestType.P_QUERY){
 				 response = handlePQuery(request);
 				 objectOutputStream.writeObject(response);				
-				 printPeerList();
+				 
 			 }else if( request.getType() == RequestType.KEEP_ALIVE){
 				 response = handleKeepAlive(request);
 				 objectOutputStream.writeObject(response);			
@@ -86,17 +86,17 @@ public class RegistrationServer extends Thread{
 	{
 		Response response = null;
 		int cookie = getCookieFromRequest(request);
-		System.out.println("Cookie for leave request: " + cookie);
+		
 		if (cookie != -1){
 			PeerListNode peerNode = getPeer(cookie);
 			synchronized (peerList) {
 				if (peerNode != null){
-					System.out.println("Found peer");
+					
 					peerNode.setAlive(false);
 					response = ResponseHelper.createResponse(ResponseType.LEAVE_OK, new HashMap<String, Object>());
 				}
 				else{
-					System.out.println("Peer not found");
+					
 					response = createPeerNotFoundResponse(ResponseType.LEAVE_ERROR);
 				}
 			}			
@@ -122,14 +122,15 @@ public class RegistrationServer extends Thread{
 							peerListToSend.add(node);
 						}
 					}
-					if(peerListToSend.size() > 0){
-						HashMap<String, Object> responseData = new HashMap<String, Object>();
-						responseData.put(DataKeyConstants.PEER_LIST, peerListToSend);
-						response = ResponseHelper.createResponse(ResponseType.PQUERY_OK, responseData);
-					}else{
+					if(peerListToSend.size() == 1 && peerListToSend.get(0).getHostName().equals(peerNode.getHostName()) && peerListToSend.get(0).getPortNumber() == peerNode.getPortNumber()){
 						HashMap<String, Object> responseData = new HashMap<String, Object>();
 						responseData.put(DataKeyConstants.ERROR_MESSAGE, "No active peers");
 						response = ResponseHelper.createResponse(ResponseType.PQUERY_ERROR, responseData);
+					}else{						
+						
+						HashMap<String, Object> responseData = new HashMap<String, Object>();
+						responseData.put(DataKeyConstants.PEER_LIST, peerListToSend);
+						response = ResponseHelper.createResponse(ResponseType.PQUERY_OK, responseData);
 					}
 				}
 				else{
@@ -180,14 +181,14 @@ public class RegistrationServer extends Thread{
 	}
 	private PeerListNode getPeer(int cookie){
 		
-		System.out.println("Cookie in get peer " + cookie);
+		
 		PeerListNode reqNode = null;
 		synchronized (peerList) {
-			System.out.println("peer list size" + peerList.size());
+			
 			Iterator<PeerListNode> iterator = peerList.iterator();
 			while(iterator.hasNext()){
 				PeerListNode node = iterator.next();
-				System.out.println("Cookie of node " + node.getCookie());
+				
 				if(node.getCookie() == cookie){
 					reqNode = node;
 					break;
@@ -212,7 +213,7 @@ public class RegistrationServer extends Thread{
 		}
 	}
 	private Response handleRegisterRequest(Request request){
-		System.out.println("Handle register method invoked");
+		
 		boolean success = false;
 		Response response = null;
 		String hostName = request.getData().get(DataKeyConstants.HOST_NAME).toString();

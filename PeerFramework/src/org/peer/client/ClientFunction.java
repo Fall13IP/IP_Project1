@@ -34,6 +34,7 @@ public class ClientFunction {
 	private List <PeerListNode> peerList;
 	private static List<RFCIndexNode> rfcIndexList = Collections.synchronizedList(new LinkedList<RFCIndexNode>());;
 	private List <RFCIndexNode> rfcList;
+	
 	private String configFileName;
 	private String rsServerIPAddress;
 	public ClientFunction(String configFileName, String rsServerIPAddress){
@@ -51,12 +52,12 @@ public class ClientFunction {
 	String x="";
 	int y=0;
 	Request clientRegisterData = RequestHelper.createRegisterRequest(hostName,portno);
-	System.out.println("Host name :"+hostName);
+	
 	
 	Response response = makeConnectionGetResponse(clientRegisterData,this.rsServerIPAddress,Constants.RS_SERVER_PORT_NUMBER);
-	System.out.println("Received response: " + response.getType().toString());
+	
 	HashMap<String, Object> data = response.getData();
-	System.out.println("Value of cookie: " + data.get(DataKeyConstants.COOKIE).toString());
+	
 	this.cookie = Integer.valueOf(data.get(DataKeyConstants.COOKIE).toString());
 	
 
@@ -73,11 +74,11 @@ public class ClientFunction {
 		
 		Request keepAliveRequest = RequestHelper.createKeepAliveRequest(cookie);
 		Response response = makeConnectionGetResponse(keepAliveRequest,this.rsServerIPAddress,Constants.RS_SERVER_PORT_NUMBER);
-		System.out.println("Type of response  "+response.getType().toString());
+		
 		if(response.getType()==ResponseType.KEEP_ALIVE_ERROR)
 		{
 			HashMap<String, Object> errData = response.getData();
-			System.out.println("Error Message: "+errData.get(DataKeyConstants.ERROR_MESSAGE));
+			
 		}
 		}
 		return 0;
@@ -88,14 +89,14 @@ public class ClientFunction {
 		int index =0;
 		Response response = makeConnectionGetResponse(pQueryRequest,this.rsServerIPAddress,Constants.RS_SERVER_PORT_NUMBER);
 		HashMap<String, Object> ClientList = response.getData();
-		System.out.println(response.getType().toString());
+		
 		peerList = (List<PeerListNode>) ClientList.get("peerList");
 		/*for(index =0;index<peerList.size();index++)
 		{
 			System.out.println(peerList.get(index));
 		*/
 		
-		System.out.println("Printing peer list");
+		/*System.out.println("Printing peer list");
 	        for(int i = 0; i < peerList.size(); i ++){
 	            PeerListNode node = peerList.get(i);
 	            System.out.println(node.getHostName());
@@ -105,7 +106,7 @@ public class ClientFunction {
 	            System.out.println(node.getPortNumber());
 	            System.out.println(node.getActiveTimes());
 	            System.out.println(node.getRecentTimestamp());
-	        }
+	        }*/
 	            return 0;
 		
 	}
@@ -115,20 +116,24 @@ public class ClientFunction {
 		int iteratorFirst=0;
 		int iteratorSecond=0;
 		Request RFCIndexRequest = RequestHelper.createRFCQueryRequest(cookie);
+		List <RFCIndexNode> tempList = new LinkedList<RFCIndexNode>();
 		System.out.println();
 		Response response = makeConnectionGetResponse(RFCIndexRequest,peerNode.getHostName(),peerNode.getPortNumber());
 		if(response.getType() == ResponseType.RFC_QUERY_ERROR){
 			
 			success = 0;			
-			System.out.println("RFC Index error: " + response.getData().get(DataKeyConstants.ERROR_MESSAGE));
+			
 		}
 		HashMap<String,Object> RFCIndex = response.getData();
 		rfcList = (List<RFCIndexNode>) RFCIndex.get(DataKeyConstants.RFC_INDEX_LIST);
-		System.out.println("Printing peer list");
-        for(int i = 0; i < rfcList.size(); i ++){
+	
+        /*for(int i = 0; i < rfcList.size(); i ++){
             RFCIndexNode node = rfcList.get(i);
             System.out.println(node.getRfcNumber());
-        }
+        }*/
+       
+        int notExists = 1;
+        int index = 0;
         //merges RFC lists
         if(rfcIndexList.isEmpty()){
         	rfcIndexList = rfcList;
@@ -141,17 +146,23 @@ public class ClientFunction {
         	{
         		if((rfcList.get(iteratorFirst).getRfcNumber()==rfcIndexList.get(iteratorSecond).getRfcNumber()) && (rfcList.get(iteratorFirst).getRfcHostname().equals(rfcIndexList.get(iteratorSecond).getRfcHostname()))){
         			//compares RFC number and host, if it is there then does not includes it inside the list otherwise adds the thing in the list.
-        			System.out.println("RFC number:"+rfcList.get(iteratorFirst).getRfcNumber()+" and Hostname: "+rfcList.get(iteratorFirst).getRfcHostname()+"are same");
+        			//System.out.println("RFC number:"+rfcList.get(iteratorFirst).getRfcNumber()+" and Hostname: "+rfcList.get(iteratorFirst).getRfcHostname()+"are same");
+        			notExists = 0;
         		}
-        		else{
-        			rfcIndexList.add(rfcList.get(iteratorFirst));
-        			addEntryToConfigFile(rfcList.get(iteratorFirst).getRfcNumber(), rfcList.get(iteratorFirst).getRfcTitle());
+        		else{        			
+        			
+        			//tempList.add(rfcList.get(iteratorFirst));
+        			//addEntryToConfigFile(rfcList.get(iteratorFirst).getRfcNumber(), rfcList.get(iteratorFirst).getRfcTitle());
         		}
       
         	}
+        	if(notExists == 1){
+        		tempList.add(rfcList.get(iteratorFirst));
+        	}
         	
         }
-             
+        rfcIndexList.addAll(tempList);   
+        
         }   
         
         
@@ -169,14 +180,14 @@ public class ClientFunction {
 		byte [] fileData = null;
 		Request request = RequestHelper.createRFCRequest(rfcIndex, rfcTitle);
 		if (request.getData() == null){
-			System.out.println("get rfc request data null");
+			
 		}else{
-			System.out.println("get rfc request data NOT null");
+			
 		}
 		Response response = makeConnectionGetResponse(request, peerNode.getHostName(), peerNode.getPortNumber());
 		if(response.getType() == ResponseType.GET_RFC_ERROR){
 						
-			System.out.println("GET RFC error: " + response.getData().get(DataKeyConstants.ERROR_MESSAGE));
+			
 		}else{
 			fileData = (byte []) response.getData().get(DataKeyConstants.RFC_FILE_DATA);
 		}
@@ -195,7 +206,7 @@ public class ClientFunction {
 		
 		Request leaveRequest = RequestHelper.createLeaveRequest(cookie);
 		Response response = makeConnectionGetResponse(leaveRequest,this.rsServerIPAddress,Constants.RS_SERVER_PORT_NUMBER);
-		System.out.println("Type of response  "+response.getType().toString());
+		
 		if(response.getType()==ResponseType.LEAVE_OK)
 		{
 			//cookie = -1;
@@ -203,7 +214,7 @@ public class ClientFunction {
 		else if(response.getType()==ResponseType.LEAVE_ERROR)
 		{
 			HashMap<String, Object> errData = response.getData();
-			System.out.println("Error Message: "+errData.get(DataKeyConstants.ERROR_MESSAGE));
+			
 		}
 		}
 			
@@ -215,6 +226,7 @@ public class ClientFunction {
 	public Response makeConnectionGetResponse(Request request,String ServerIP,int ServerPort){//makes socket connection and does request and response., made it a general IP and port address function, now even a client can use it.
 		
 		try {
+			//System.out.println("In make connx server ip: " + ServerIP + " server port: " + ServerPort);
 			Socket socketConnection = new Socket(ServerIP,ServerPort);			
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(socketConnection.getOutputStream());
 			objectOutputStream.writeObject(request);			
@@ -224,6 +236,7 @@ public class ClientFunction {
 			Response response = (Response) objectInputStream.readObject();
 			System.out.println("Peer Client: Received response");
 			response.printResponse();
+			socketConnection.close();
 			return response;
 		}
 		catch (Exception e) {
@@ -248,7 +261,7 @@ public class ClientFunction {
 				line = bufferedReader.readLine();
 				rfcNode.setRfcTitle(line);
 				rfcNode.setTtlValue(Constants.INITIAL_TTL_VALUE);
-                rfcNode.setRfcHostname(RequestHelper.getHost());
+                rfcNode.setRfcHostname(RequestHelper.getIP());
 				rfcIndexList.add(rfcNode);
 			}			
 		} catch ( IOException e) {			
